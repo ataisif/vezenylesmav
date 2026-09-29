@@ -11,9 +11,11 @@ import {
   BookOpen,
   BarChart3,
   Building2,
-  Plus
+  Plus,
+  FileText
 } from 'lucide-react';
 import { StationConfig } from '../types';
+import { downloadUserGuideDOCX } from '../utils/userGuideGenerator';
 
 interface HeaderProps {
   activeTab: 'schedule' | 'compliance' | 'leaves' | 'worktime' | 'rules';
@@ -30,6 +32,7 @@ interface HeaderProps {
   onPrint: () => void;
   onOpenTeamModal: () => void;
   onOpenStationModal: () => void;
+  onOpenUserGuide: () => void;
   violationCount: number;
   isGenerating?: boolean;
 }
@@ -49,6 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
   onPrint,
   onOpenTeamModal,
   onOpenStationModal,
+  onOpenUserGuide,
   violationCount,
   isGenerating = false
 }) => {
@@ -63,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
           
-          {/* Zone 1: Brand Wordmark */}
+          {/* Zone 1: Brand Wordmark & Top-Left Download Links (Bal felső sarok) */}
           <div className="flex items-center gap-3 shrink-0">
             <div className="h-9 w-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Train className="w-5 h-5" />
@@ -75,6 +79,31 @@ export const Header: React.FC<HeaderProps> = ({
               <p className="text-[11px] text-slate-400 font-medium tracking-wide">
                 Kollektív Szerződés Vezényléstervező
               </p>
+            </div>
+
+            {/* Bal felső sarok: Felhasználói Útmutató Letöltési Gombok */}
+            <div className="flex items-center gap-1.5 ml-1 sm:ml-3 pl-2 sm:pl-3 border-l border-slate-800">
+              <button
+                type="button"
+                onClick={onOpenUserGuide}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-semibold transition-all cursor-pointer shadow-xs"
+                title="Felhasználói Útmutató megnyitása és olvasása"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="hidden md:inline">Felhasználói Útmutató</span>
+                <span className="md:hidden">Útmutató</span>
+              </button>
+
+              {/* Direct DOCX Download Link */}
+              <button
+                type="button"
+                onClick={downloadUserGuideDOCX}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition-all cursor-pointer shadow-xs"
+                title="Felhasználói Útmutató közvetlen letöltése Word formátumban (.docx)"
+              >
+                <FileText className="w-3 h-3 shrink-0" />
+                <span>DOCX Letöltés</span>
+              </button>
             </div>
           </div>
 
