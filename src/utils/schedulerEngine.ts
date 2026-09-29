@@ -38,6 +38,10 @@ export function calculateShiftHourBreakdown(
       // 07:00 - 15:20 -> 14:00 - 15:20 = 1.33h afternoon
       afternoonHours = 1.33;
       nightHours = 0;
+    } else if (shiftTypeId === 'BB_ADMIN') {
+      // 07:30 - 15:50 -> 14:00 - 15:50 = 1.83h afternoon
+      afternoonHours = 1.83;
+      nightHours = 0;
     } else if (shiftTypeId === 'DU8') {
       // 14:00 - 22:00 -> 8 afternoon hours (KSz 47.§ 1.a)
       afternoonHours = 8;
@@ -375,7 +379,11 @@ export function generateSmartMonthlySchedule(
       } else {
         if (dayOfWeek !== 0 && dayOfWeek !== 6 && !HUNGARIAN_HOLIDAYS_MAP[dateStr]) {
           if (isSignaling) {
-            shiftId = 'BB_KARB'; // 8h biztosítóberendezési szolgálat (07:00-15:20)
+            if (emp.role.toLowerCase().includes('adminisztrátor')) {
+              shiftId = 'BB_ADMIN'; // 8h biztosítóberendezési adminisztráció (07:30-15:50)
+            } else {
+              shiftId = 'BB_KARB'; // 8h biztosítóberendezési szolgálat (07:00-15:20)
+            }
           } else {
             shiftId = emp.workPattern === 'EXTENDED_SHIFT' ? 'NY12' : 'DE8';
           }

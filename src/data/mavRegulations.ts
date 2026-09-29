@@ -225,6 +225,23 @@ export const MAV_SHIFT_TYPES: ShiftType[] = [
     applicablePatterns: ['DISPATCHED', 'STANDARD'],
     targetDepartment: 'ALL'
   },
+  {
+    id: 'BB_ADMIN',
+    code: 'ADM',
+    name: 'BB Szakasz Adminisztráció (8h)',
+    category: 'WORK',
+    defaultStartTime: '07:30',
+    defaultEndTime: '15:50',
+    durationHours: 8,
+    isNightShift: false,
+    isDayShift: true,
+    color: '#0284c7', // Sky 600
+    textColor: '#ffffff',
+    badgeBg: 'bg-sky-600',
+    description: 'Biztosítóberendezési szakaszadminisztráció, forgalmi és műszaki nyilvántartási feladatok általános munkarendben (H-P).',
+    applicablePatterns: ['STANDARD'],
+    targetDepartment: 'SIGNALING'
+  },
 
   // --- Szabadságok és Távollétek ---
   {
@@ -339,9 +356,9 @@ export const MAV_SHIFT_TYPES: ShiftType[] = [
     durationHours: 0,
     isNightShift: false,
     isDayShift: false,
-    color: '#475569', // Slate 600
-    textColor: '#e2e8f0',
-    badgeBg: 'bg-slate-700',
+    color: '#059669', // Emerald Green 600 (Zöld)
+    textColor: '#ffffff',
+    badgeBg: 'bg-emerald-600',
     description: 'Előre közölt heti pihenőidő vagy szolgálatközi pihenő (KSz 41.§, 42.§).',
     applicablePatterns: ['CONTINUOUS_4_SHIFT', 'CONTINUOUS_12_24', 'THREE_SHIFT', 'TWO_SHIFT', 'EXTENDED_SHIFT', 'DISPATCHED', 'STANDARD'],
     targetDepartment: 'ALL'
@@ -362,7 +379,8 @@ export const MAV_STATIONS: StationConfig[] = [
       { role: 'Külső forgalmi szolgálattevő', dayShiftCount: 1, nightShiftCount: 1, department: 'TRAFFIC' },
       { role: 'Váltókezelő', dayShiftCount: 2, nightShiftCount: 2, department: 'TRAFFIC' },
       { role: 'Biztosítóberendezési műszerész', dayShiftCount: 1, nightShiftCount: 1, department: 'SIGNALING' },
-      { role: 'Biztosítóberendezési lakatos', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' }
+      { role: 'Biztosítóberendezési lakatos', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' },
+      { role: 'Biztosítóberendezési adminisztrátor', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' }
     ]
   },
   {
@@ -376,7 +394,8 @@ export const MAV_STATIONS: StationConfig[] = [
       { role: 'Biztosítóberendezési szakaszmérnök', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' },
       { role: 'Biztosítóberendezési műszerész', dayShiftCount: 2, nightShiftCount: 1, department: 'SIGNALING' },
       { role: 'Biztosítóberendezési lakatos', dayShiftCount: 2, nightShiftCount: 1, department: 'SIGNALING' },
-      { role: 'Biztosítóberendezési technikus', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' }
+      { role: 'Biztosítóberendezési technikus', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' },
+      { role: 'Biztosítóberendezési adminisztrátor', dayShiftCount: 1, nightShiftCount: 0, department: 'SIGNALING' }
     ]
   },
   {

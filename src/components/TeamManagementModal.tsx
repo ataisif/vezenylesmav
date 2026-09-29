@@ -63,7 +63,7 @@ export const TeamManagementModal: React.FC<TeamManagementModalProps> = ({
     setDepartment(newDept);
 
     // Auto-adjust work pattern recommendations based on role
-    if (newRole === 'Biztosítóberendezési szakaszmérnök' || newRole === 'Digitális és hibaelhárító mérnök') {
+    if (newRole === 'Biztosítóberendezési szakaszmérnök' || newRole === 'Digitális és hibaelhárító mérnök' || newRole.toLowerCase().includes('adminisztrátor')) {
       setWorkPattern('STANDARD');
     } else if (newRole === 'Biztosítóberendezési lakatos' || newRole === 'Biztosítóberendezési műszerész' || newRole === 'Biztosítóberendezési technikus' || newRole === 'Biztosítóberendezési vonalellenőr') {
       setWorkPattern('DISPATCHED');

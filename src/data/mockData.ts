@@ -288,6 +288,44 @@ export const INITIAL_EMPLOYEES: Employee[] = [
     avatarUrl: '',
     phone: '+36 30 338 7190',
     email: 'janos.kerekes@teb.mav.hu'
+  },
+  {
+    id: 'emp-16',
+    name: 'Kovács Anikó',
+    employeeNumber: 'MV-22890',
+    role: 'Biztosítóberendezési adminisztrátor',
+    department: 'SIGNALING',
+    workPattern: 'STANDARD', // Általános munkarend (H-P 07:30 - 15:50)
+    station: 'Budapest-Kelenföld',
+    travelMinutes: 25,
+    age: 36,
+    bloodDonationsThisYear: 1,
+    isEligibleForSpecialLeave: false,
+    annualOvertimeHours: 6,
+    totalAnnualLeaveDays: 25,
+    usedLeaveDays: 8,
+    avatarUrl: '',
+    phone: '+36 30 765 4321',
+    email: 'aniko.kovacs@teb.mav.hu'
+  },
+  {
+    id: 'emp-17',
+    name: 'Varga Beatrix',
+    employeeNumber: 'MV-22915',
+    role: 'Biztosítóberendezési adminisztrátor',
+    department: 'SIGNALING',
+    workPattern: 'STANDARD', // Általános munkarend
+    station: 'Budapest-Kelenföld TEB Szakaszmérnökség',
+    travelMinutes: 20,
+    age: 41,
+    bloodDonationsThisYear: 2,
+    isEligibleForSpecialLeave: false,
+    annualOvertimeHours: 4,
+    totalAnnualLeaveDays: 26,
+    usedLeaveDays: 10,
+    avatarUrl: '',
+    phone: '+36 30 884 1255',
+    email: 'beatrix.varga@teb.mav.hu'
   }
 ];
 

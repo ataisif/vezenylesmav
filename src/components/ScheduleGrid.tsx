@@ -284,7 +284,11 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
         </div>
 
         {/* Legend */}
-        <div className="flex items-center flex-wrap gap-2 text-[11px] text-slate-400">
+        <div className="flex items-center flex-wrap gap-2.5 text-[11px] text-slate-300">
+          <span className="flex items-center gap-1 bg-emerald-950/40 border border-emerald-500/40 px-1.5 py-0.5 rounded text-emerald-300 font-bold">
+            <span className="w-2.5 h-2.5 rounded bg-emerald-600 inline-block shadow-xs"></span>
+            <span>P: Pihenő (zöld)</span>
+          </span>
           <span className="flex items-center gap-1">
             <span className="w-2.5 h-2.5 rounded bg-sky-600 inline-block"></span>
             <span>N12 (12h)</span>
@@ -294,7 +298,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
             <span>É12 (12h)</span>
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded bg-emerald-600 inline-block"></span>
+            <span className="w-2.5 h-2.5 rounded bg-teal-600 inline-block"></span>
             <span>BB-K (8h karb.)</span>
           </span>
           <span className="flex items-center gap-1">
@@ -302,20 +306,20 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
             <span>BB-HN (12h hibaelh.)</span>
           </span>
           <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded bg-blue-800 inline-block"></span>
+            <span>BB-HÉ (12h éjjel)</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-2.5 h-2.5 rounded bg-blue-600 inline-block"></span>
+            <span>ADM (8h admin.)</span>
+          </span>
+          <span className="flex items-center gap-1">
             <span className="w-2.5 h-2.5 rounded bg-amber-500 inline-block"></span>
             <span>KÉSZ (készenlét)</span>
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded bg-teal-600 inline-block"></span>
-            <span>DE8</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded bg-green-600 inline-block"></span>
-            <span>SZ: Szabi</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="w-2.5 h-2.5 rounded bg-slate-700 inline-block"></span>
-            <span>P: Pihenő</span>
+            <span className="w-2.5 h-2.5 rounded bg-green-700 inline-block"></span>
+            <span>SZAB (szabi)</span>
           </span>
         </div>
       </div>
@@ -715,23 +719,49 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                                 ? 'ring-1 ring-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.45)]'
                                 : ''
                             } ${
-                              shift.category === 'REST'
-                                ? 'bg-slate-900 text-slate-500 border border-slate-800/80 hover:border-slate-700'
-                                : shift.id === 'SZAB'
-                                ? 'bg-emerald-600/90 text-white font-bold'
-                                : shift.id === 'BETEG'
-                                ? 'bg-rose-600/90 text-white'
+                              shift.category === 'REST' || shift.id === 'PIH'
+                                ? 'bg-emerald-600 dark:bg-emerald-700 text-white font-bold border border-emerald-500/80 shadow-xs hover:bg-emerald-500'
+                                : shift.id === 'BB_KARB'
+                                ? 'bg-teal-600 text-white font-bold'
+                                : shift.id === 'BB_ZAVAR_N'
+                                ? 'bg-cyan-600 text-white font-bold'
+                                : shift.id === 'BB_ZAVAR_E'
+                                ? 'bg-indigo-800 text-white font-bold'
+                                : shift.id === 'BB_DISZP_N'
+                                ? 'bg-violet-600 text-white font-bold'
+                                : shift.id === 'BB_DISZP_E'
+                                ? 'bg-purple-900 text-white font-bold'
+                                : shift.id === 'BB_ADMIN'
+                                ? 'bg-blue-600 text-white font-bold'
+                                : shift.id === 'KESZ'
+                                ? 'bg-amber-500 text-slate-950 font-bold border border-amber-400'
+                                : shift.id === 'UGY'
+                                ? 'bg-orange-600 text-white font-bold'
                                 : shift.id === 'N12'
-                                ? 'bg-sky-600 text-white'
+                                ? 'bg-sky-600 text-white font-bold'
                                 : shift.id === 'E12'
                                 ? 'bg-indigo-700 text-white font-bold'
-                                : shift.id === 'EJ8'
-                                ? 'bg-purple-700 text-white'
                                 : shift.id === 'DE8'
-                                ? 'bg-teal-600 text-white'
+                                ? 'bg-teal-700 text-white font-bold'
                                 : shift.id === 'DU8'
-                                ? 'bg-amber-600 text-white'
-                                : 'bg-slate-700 text-white'
+                                ? 'bg-amber-600 text-white font-bold'
+                                : shift.id === 'EJ8'
+                                ? 'bg-purple-700 text-white font-bold'
+                                : shift.id === 'NY12'
+                                ? 'bg-blue-700 text-white font-bold'
+                                : shift.id === 'SZAB'
+                                ? 'bg-green-700 text-white font-black border border-green-600'
+                                : shift.id === 'BETEG'
+                                ? 'bg-rose-600 text-white font-bold'
+                                : shift.id === 'VER'
+                                ? 'bg-red-600 text-white font-bold'
+                                : shift.id === 'KSZ_SZAB'
+                                ? 'bg-emerald-800 text-white font-bold'
+                                : shift.id === 'ORV'
+                                ? 'bg-cyan-500 text-white font-bold'
+                                : shift.id === 'OKT'
+                                ? 'bg-fuchsia-700 text-white font-bold'
+                                : shift.badgeBg ? `${shift.badgeBg} text-white font-bold` : 'bg-slate-700 text-white'
                             }`}
                           >
                             <span>{shift.code}</span>

@@ -179,6 +179,8 @@ export const TRAFFIC_ROLES = [
 ] as const;
 
 export const SIGNALING_ROLES = [
+  'Biztosítóberendezési adminisztrátor',
+  'Biztosítóberendezési szakaszadminisztrátor',
   'Biztosítóberendezési lakatos',
   'Biztosítóberendezési műszerész',
   'Biztosítóberendezési szakaszmérnök',
