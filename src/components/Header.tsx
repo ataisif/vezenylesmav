@@ -68,19 +68,28 @@ export const Header: React.FC<HeaderProps> = ({
     'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'
   ];
 
-  // Close dropdown on click outside
+  // Close dropdown on click outside and escape key
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (toolsMenuRef.current && !toolsMenuRef.current.contains(event.target as Node)) {
         setIsToolsMenuOpen(false);
       }
     };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsToolsMenuOpen(false);
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
-    <header className="border-b border-slate-800 bg-slate-950/95 backdrop-blur sticky top-0 z-30 no-print select-none">
+    <header className="border-b border-slate-800 bg-slate-950/95 backdrop-blur sticky top-0 z-40 no-print select-none">
       {/* 1. SOR: Szolgálati hely, Időszak, Tervezés & Globális Vezérlők (Minden balra igazítva) */}
       <div className="px-4 sm:px-6 py-2 border-b border-slate-800/70">
         <div className="flex items-center justify-start gap-2.5 flex-wrap">
@@ -217,8 +226,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* 2. SOR: Navigációs Fülek & Almenük (Teljesen balra igazítva) */}
-      <div className="px-4 sm:px-6 py-1 bg-slate-900/40 flex items-center justify-start gap-1 overflow-x-auto">
+      {/* 2. SOR: Navigációs Fülek & Almenük (Teljesen balra igazítva, overflow nélkül a lenyíló menünek) */}
+      <div className="px-4 sm:px-6 py-1 bg-slate-900/40 flex items-center justify-start gap-1 flex-wrap relative z-20">
         
         {/* Navigációs fül: Vezénylési Rács */}
         <button
@@ -284,22 +293,26 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="relative shrink-0" ref={toolsMenuRef}>
           <button
             type="button"
-            onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
+            onClick={() => setIsToolsMenuOpen(prev => !prev)}
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer ${
               isToolsMenuOpen 
-                ? 'bg-slate-800 text-amber-400 border border-slate-700' 
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
+                : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/80'
             }`}
+            title="További eszközök és funkciók megnyitása"
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-3.5 h-3.5 text-amber-400" />
             <span>További Műveletek</span>
-            <ChevronDown className={`w-3 h-3 transition-transform ${isToolsMenuOpen ? 'rotate-180 text-amber-400' : 'text-slate-400'}`} />
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-150 ${isToolsMenuOpen ? 'rotate-180 text-amber-400' : 'text-slate-400'}`} />
           </button>
 
           {/* Lenyíló almenü panel */}
           {isToolsMenuOpen && (
-            <div className="absolute left-0 mt-1.5 w-64 bg-slate-900 border border-slate-700 rounded-lg shadow-xl py-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-              <div className="px-3 py-1.5 border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
+            <div 
+              className="absolute left-0 top-full mt-1.5 w-72 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl py-1.5 z-50 ring-1 ring-black/50"
+              style={{ minWidth: '18rem' }}
+            >
+              <div className="px-3 py-1 border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
                 Adatkezelés & Export
               </div>
               
@@ -309,12 +322,12 @@ export const Header: React.FC<HeaderProps> = ({
                   setIsToolsMenuOpen(false);
                   onExportCSV();
                 }}
-                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800/80 flex items-center gap-2.5 transition-colors cursor-pointer"
               >
                 <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />
                 <div>
-                  <div className="font-medium">Excel / CSV Exportálás</div>
-                  <div className="text-[10px] text-slate-400">Havi beosztás táblázatos letöltése</div>
+                  <div className="font-medium text-white">Excel / CSV Exportálás</div>
+                  <div className="text-[10px] text-slate-400">Havi beosztás letöltése táblázatként</div>
                 </div>
               </button>
 
@@ -324,17 +337,17 @@ export const Header: React.FC<HeaderProps> = ({
                   setIsToolsMenuOpen(false);
                   onPrint();
                 }}
-                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800/80 flex items-center gap-2.5 transition-colors cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-sky-400 shrink-0" />
                 <div>
-                  <div className="font-medium">Hivatalos Vezénylési Lap</div>
+                  <div className="font-medium text-white">Hivatalos Vezénylési Lap</div>
                   <div className="text-[10px] text-slate-400">A4 formátumú nyomtatás és PDF</div>
                 </div>
               </button>
 
-              <div className="px-3 py-1.5 border-t border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400 mt-1">
-                Törzsadatok és Személyzet
+              <div className="px-3 py-1 border-t border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400 mt-1">
+                Törzsadatok & Munkarendek
               </div>
 
               <button
@@ -343,11 +356,11 @@ export const Header: React.FC<HeaderProps> = ({
                   setIsToolsMenuOpen(false);
                   onOpenTeamModal();
                 }}
-                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800/80 flex items-center gap-2.5 transition-colors cursor-pointer"
               >
                 <Users className="w-4 h-4 text-amber-400 shrink-0" />
                 <div>
-                  <div className="font-medium">Dolgozók és Munkarendek</div>
+                  <div className="font-medium text-white">Dolgozók és Munkarendek</div>
                   <div className="text-[10px] text-slate-400">Képesítések, utazási idők, létszám</div>
                 </div>
               </button>
@@ -358,12 +371,46 @@ export const Header: React.FC<HeaderProps> = ({
                   setIsToolsMenuOpen(false);
                   onOpenStationModal();
                 }}
-                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800/80 flex items-center gap-2.5 transition-colors cursor-pointer"
               >
                 <Building2 className="w-4 h-4 text-amber-400 shrink-0" />
                 <div>
-                  <div className="font-medium">Szolgálati Helyek Beállítása</div>
+                  <div className="font-medium text-white">Szolgálati Helyek Beállítása</div>
                   <div className="text-[10px] text-slate-400">Állomások, vonalszámok és műszakigények</div>
+                </div>
+              </button>
+
+              <div className="px-3 py-1 border-t border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400 mt-1">
+                Szabályozás & Igények
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  onOpenLeavesModal();
+                }}
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800/80 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <Clock className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div>
+                  <div className="font-medium text-white">Szabadságok & Műszakcserék</div>
+                  <div className="text-[10px] text-slate-400">Kérelmek jóváhagyása és cserék kezelése</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  onOpenWorkTimeModal();
+                }}
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800/80 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <BarChart3 className="w-4 h-4 text-indigo-400 shrink-0" />
+                <div>
+                  <div className="font-medium text-white">Munkaidő Mérleg Kimutatás</div>
+                  <div className="text-[10px] text-slate-400">Törvényes órák és túlórák áttekintése</div>
                 </div>
               </button>
             </div>
