@@ -13,9 +13,13 @@ import {
   Building2,
   Plus,
   ChevronDown,
-  Layers
+  Layers,
+  Sun,
+  Moon,
+  Palette
 } from 'lucide-react';
 import { StationConfig } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface HeaderProps {
   activeTab: 'schedule' | 'compliance' | 'leaves' | 'worktime' | 'rules';
@@ -62,6 +66,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
   const toolsMenuRef = useRef<HTMLDivElement>(null);
+  const { designStyle, colorMode, setDesignStyle, toggleColorMode } = useTheme();
 
   const monthsHu = [
     'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
@@ -89,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="border-b border-slate-800 bg-slate-950/95 backdrop-blur sticky top-0 z-40 no-print select-none">
+    <header className="border-b border-slate-800 bg-slate-950/95 backdrop-blur sticky top-0 z-40 no-print select-none win7-glass-bar">
       {/* 1. SOR: Szolgálati hely, Időszak, Tervezés & Globális Vezérlők (Minden balra igazítva) */}
       <div className="px-4 sm:px-6 py-2 border-b border-slate-800/70">
         <div className="flex items-center justify-start gap-2.5 flex-wrap">
@@ -188,7 +193,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onAutoGenerate}
             disabled={isGenerating}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs px-3 py-1.5 rounded-md shadow-xs transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs px-3 py-1.5 rounded-md shadow-xs transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer shrink-0 win7-primary-btn"
             title="Havi vezénylési rács automatikus feltöltése a MÁV KSz szabályai szerint"
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -223,6 +228,61 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
+          <div className="h-4 w-px bg-slate-800 shrink-0" aria-hidden="true" />
+
+          {/* Stílus és Színtéma Váltó Kapcsolók */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Design Stílus Váltó (Modern MÁV vs Windows 7 Aero) */}
+            <div className="flex items-center bg-slate-900 border border-slate-700/80 rounded-md p-0.5">
+              <button
+                type="button"
+                onClick={() => setDesignStyle('modern')}
+                className={`px-2 py-1 text-xs rounded transition-all flex items-center gap-1 cursor-pointer font-medium ${
+                  designStyle === 'modern'
+                    ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 shadow-xs'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Modern MÁV vezérlőtermi dizájn"
+              >
+                <Train className="w-3 h-3 text-amber-400" />
+                <span className="text-[11px]">Modern</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDesignStyle('win7')}
+                className={`px-2 py-1 text-xs rounded transition-all flex items-center gap-1 cursor-pointer font-medium ${
+                  designStyle === 'win7'
+                    ? 'bg-sky-500/20 text-sky-300 font-bold border border-sky-500/40 shadow-xs'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Klasszikus Windows 7 Aero dizájn (fényes gombok, üveghatás, Segoe UI)"
+              >
+                <span className="text-[11px]">🪟</span>
+                <span className="text-[11px]">Win 7</span>
+              </button>
+            </div>
+
+            {/* Sötét / Világos Mód Váltó */}
+            <button
+              type="button"
+              onClick={toggleColorMode}
+              className="flex items-center gap-1.5 px-2 py-1.5 text-xs rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-colors cursor-pointer"
+              title={colorMode === 'dark' ? 'Váltás Világos Módra (Light)' : 'Váltás Sötét Módra (Dark)'}
+            >
+              {colorMode === 'dark' ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="hidden lg:inline text-[11px]">Világos</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-sky-400" />
+                  <span className="hidden lg:inline text-[11px]">Sötét</span>
+                </>
+              )}
+            </button>
+          </div>
+
         </div>
       </div>
 
@@ -232,9 +292,9 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Navigációs fül: Vezénylési Rács */}
         <button
           onClick={() => setActiveTab('schedule')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer shrink-0 win7-tab ${
             activeTab === 'schedule'
-              ? 'bg-slate-800 text-amber-400 border border-slate-700 shadow-xs'
+              ? 'bg-slate-800 text-amber-400 border border-slate-700 shadow-xs win7-tab-active font-semibold'
               : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
@@ -245,13 +305,13 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Navigációs fül: Szabályossági Audit */}
         <button
           onClick={() => setActiveTab('compliance')}
-          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer shrink-0 win7-tab ${
             activeTab === 'compliance'
-              ? 'bg-slate-800 text-amber-400 border border-slate-700 shadow-xs'
+              ? 'bg-slate-800 text-amber-400 border border-slate-700 shadow-xs win7-tab-active font-semibold'
               : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
           }`}
         >
-          <ShieldCheck className="w-3.5 h-3.5" />
+          <ShieldCheck className="w-3.5 h-3.5 text-sky-400" />
           <span>Szabályossági Audit</span>
           {violationCount > 0 && (
             <span className="inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded">
@@ -263,7 +323,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Navigációs fül: Szabadságok & Igények (modalt nyit meg) */}
         <button
           onClick={onOpenLeavesModal}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0 win7-tab"
         >
           <Clock className="w-3.5 h-3.5 text-emerald-400" />
           <span>Szabadságok & Igények</span>
@@ -272,7 +332,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Navigációs fül: Munkaidő Mérleg (modalt nyit meg) */}
         <button
           onClick={onOpenWorkTimeModal}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0 win7-tab"
         >
           <BarChart3 className="w-3.5 h-3.5 text-indigo-400" />
           <span>Munkaidő Mérleg</span>
@@ -281,7 +341,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Navigációs fül: MÁV KSz Szabálytár (fiókot nyit meg) */}
         <button
           onClick={onOpenRulesDrawer}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0 win7-tab"
         >
           <BookOpen className="w-3.5 h-3.5 text-amber-300" />
           <span>MÁV KSz Szabálytár</span>
@@ -293,25 +353,21 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="relative shrink-0" ref={toolsMenuRef}>
           <button
             type="button"
-            onClick={() => setIsToolsMenuOpen(prev => !prev)}
-            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap cursor-pointer ${
+            onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer win7-tab ${
               isToolsMenuOpen 
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' 
-                : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700/80'
+                ? 'bg-slate-800 text-amber-400 border border-slate-700' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
             }`}
-            title="További eszközök és funkciók megnyitása"
           >
-            <Layers className="w-3.5 h-3.5 text-amber-400" />
+            <Layers className="w-3.5 h-3.5" />
             <span>További Műveletek</span>
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-150 ${isToolsMenuOpen ? 'rotate-180 text-amber-400' : 'text-slate-400'}`} />
+            <ChevronDown className={`w-3 h-3 transition-transform ${isToolsMenuOpen ? 'rotate-180 text-amber-400' : 'text-slate-400'}`} />
           </button>
 
           {/* Lenyíló almenü panel */}
           {isToolsMenuOpen && (
-            <div 
-              className="absolute left-0 top-full mt-1.5 w-72 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl py-1.5 z-50 ring-1 ring-black/50"
-              style={{ minWidth: '18rem' }}
-            >
+            <div className="absolute left-0 top-full mt-1.5 w-72 bg-slate-900 border border-slate-700 rounded-lg shadow-2xl py-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150 backdrop-blur-md">
               <div className="px-3 py-1 border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
                 Adatkezelés & Export
               </div>
@@ -327,7 +383,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />
                 <div>
                   <div className="font-medium text-white">Excel / CSV Exportálás</div>
-                  <div className="text-[10px] text-slate-400">Havi beosztás letöltése táblázatként</div>
+                  <div className="text-[10px] text-slate-400">Havi beosztás táblázatos letöltése</div>
                 </div>
               </button>
 
@@ -413,6 +469,37 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className="text-[10px] text-slate-400">Törvényes órák és túlórák áttekintése</div>
                 </div>
               </button>
+
+              <div className="px-3 py-1 border-t border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400 mt-1">
+                Megjelenés & Stílus
+              </div>
+
+              <div className="px-3 py-2 flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDesignStyle(designStyle === 'modern' ? 'win7' : 'modern');
+                    setIsToolsMenuOpen(false);
+                  }}
+                  className="px-2 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1 font-medium transition-colors"
+                >
+                  <Palette className="w-3 h-3 text-amber-400" />
+                  <span>{designStyle === 'modern' ? 'Váltás Win 7-re' : 'Váltás Modernre'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    toggleColorMode();
+                    setIsToolsMenuOpen(false);
+                  }}
+                  className="px-2 py-1 text-xs rounded bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center gap-1 font-medium transition-colors"
+                >
+                  {colorMode === 'dark' ? <Sun className="w-3 h-3 text-amber-400" /> : <Moon className="w-3 h-3 text-sky-400" />}
+                  <span>{colorMode === 'dark' ? 'Világos mód' : 'Sötét mód'}</span>
+                </button>
+              </div>
+
             </div>
           )}
         </div>

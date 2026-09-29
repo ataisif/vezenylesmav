@@ -3,6 +3,7 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
   
   .font-mono, .tabular-nums {
@@ -11,7 +12,397 @@
   }
 }
 
-/* Custom rail scrollbar */
+/* ==========================================================================
+   THEME STYLES: MODERN & WINDOWS 7 AERO (LIGHT & DARK MODES)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GLOBAL LIGHT MODE OVERRIDES (.theme-light)
+   -------------------------------------------------------------------------- */
+.theme-light {
+  color-scheme: light;
+}
+
+.theme-light body,
+.theme-light .theme-root-container {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Surfaces and panels */
+.theme-light .bg-slate-950 {
+  background-color: #f8fafc !important;
+}
+.theme-light .bg-slate-950\/95,
+.theme-light .bg-slate-950\/90,
+.theme-light .bg-slate-950\/70,
+.theme-light .bg-slate-950\/60,
+.theme-light .bg-slate-950\/50 {
+  background-color: #ffffff !important;
+}
+
+.theme-light .bg-slate-900 {
+  background-color: #ffffff !important;
+}
+.theme-light .bg-slate-900\/90,
+.theme-light .bg-slate-900\/80,
+.theme-light .bg-slate-900\/70 {
+  background-color: #ffffff !important;
+}
+.theme-light .bg-slate-900\/60,
+.theme-light .bg-slate-900\/50,
+.theme-light .bg-slate-900\/40 {
+  background-color: #f8fafc !important;
+}
+
+.theme-light .bg-slate-800 {
+  background-color: #e2e8f0 !important;
+}
+.theme-light .bg-slate-800\/60,
+.theme-light .bg-slate-800\/70 {
+  background-color: rgba(226, 232, 240, 0.7) !important;
+}
+
+/* Alert & Metric Tile Light Mode Overrides */
+.theme-light .bg-rose-950\/20,
+.theme-light .bg-rose-950\/25,
+.theme-light .bg-rose-950\/30,
+.theme-light .bg-rose-950\/40 {
+  background-color: #fff1f2 !important;
+}
+.theme-light .border-rose-800\/40,
+.theme-light .border-rose-800\/50 {
+  border-color: #fca5a5 !important;
+}
+
+.theme-light .bg-amber-950\/20,
+.theme-light .bg-amber-950\/25,
+.theme-light .bg-amber-950\/30,
+.theme-light .bg-amber-950\/40 {
+  background-color: #fffbeb !important;
+}
+.theme-light .border-amber-800\/40,
+.theme-light .border-amber-800\/50 {
+  border-color: #fcd34d !important;
+}
+
+.theme-light .bg-emerald-950\/20,
+.theme-light .bg-emerald-950\/25,
+.theme-light .bg-emerald-950\/30,
+.theme-light .bg-emerald-950\/40 {
+  background-color: #ecfdf5 !important;
+}
+.theme-light .border-emerald-800\/40,
+.theme-light .border-emerald-800\/50 {
+  border-color: #6ee7b7 !important;
+}
+
+/* Borders */
+.theme-light .border-slate-800,
+.theme-light .border-slate-800\/80,
+.theme-light .border-slate-800\/70,
+.theme-light .border-slate-800\/60,
+.theme-light .border-slate-800\/40 {
+  border-color: #cbd5e1 !important;
+}
+.theme-light .border-slate-700,
+.theme-light .border-slate-700\/80 {
+  border-color: #94a3b8 !important;
+}
+
+/* Text colors with guaranteed high contrast */
+.theme-light .text-white {
+  color: #0f172a !important;
+}
+.theme-light .text-slate-100 {
+  color: #0f172a !important;
+}
+.theme-light .text-slate-200 {
+  color: #1e293b !important;
+}
+.theme-light .text-slate-300 {
+  color: #334155 !important;
+}
+.theme-light .text-slate-400 {
+  color: #475569 !important;
+}
+.theme-light .text-slate-500 {
+  color: #64748b !important;
+}
+.theme-light .text-sky-400 {
+  color: #1d4ed8 !important;
+}
+.theme-light .text-amber-400 {
+  color: #b45309 !important;
+}
+.theme-light .text-rose-400 {
+  color: #be123c !important;
+}
+.theme-light .text-emerald-400 {
+  color: #047857 !important;
+}
+
+/* Form controls in light mode */
+.theme-light select,
+.theme-light input[type="text"],
+.theme-light input[type="search"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Modal backgrounds in light mode */
+.theme-light .fixed.inset-0.bg-black\/70,
+.theme-light .fixed.inset-0.bg-black\/80 {
+  background-color: rgba(15, 23, 42, 0.6) !important;
+}
+
+/* Table cells in light mode */
+.theme-light td,
+.theme-light th {
+  border-color: #e2e8f0 !important;
+}
+.theme-light .hover\:bg-slate-800\/70:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. WINDOWS 7 AERO THEME (.theme-win7)
+   -------------------------------------------------------------------------- */
+.theme-win7 {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Windows 7 Aero Glass Header Bar */
+.theme-win7 .win7-glass-bar {
+  backdrop-filter: blur(12px) saturate(160%);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-win7.theme-light .win7-glass-bar {
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.8) 0%, 
+    rgba(226, 238, 249, 0.7) 48%, 
+    rgba(186, 218, 245, 0.6) 49%, 
+    rgba(215, 234, 251, 0.7) 100%) !important;
+  border-bottom: 1px solid #7da2ce !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 4px rgba(0, 60, 120, 0.15) !important;
+}
+
+.theme-win7.theme-dark .win7-glass-bar {
+  background: linear-gradient(180deg, 
+    rgba(35, 52, 70, 0.9) 0%, 
+    rgba(23, 37, 51, 0.85) 48%, 
+    rgba(14, 24, 34, 0.8) 49%, 
+    rgba(20, 34, 48, 0.85) 100%) !important;
+  border-bottom: 1px solid #2d455d !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Title text */
+.theme-win7 .win7-title-text {
+  text-shadow: 0 0 8px rgba(160, 210, 255, 0.6);
+}
+.theme-win7.theme-light .win7-title-text {
+  color: #113155 !important;
+}
+.theme-win7.theme-dark .win7-title-text {
+  color: #e0f2fe !important;
+}
+
+/* Titlebar utility buttons */
+.theme-win7 .win7-titlebar-btn {
+  border-radius: 3px !important;
+  border: 1px solid rgba(0, 60, 120, 0.2) !important;
+  transition: all 0.15s ease !important;
+}
+.theme-win7.theme-light .win7-titlebar-btn {
+  background: rgba(255, 255, 255, 0.6) !important;
+  color: #1e395b !important;
+}
+.theme-win7.theme-light .win7-titlebar-btn:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 0 5px rgba(0, 120, 215, 0.4) !important;
+}
+.theme-win7.theme-dark .win7-titlebar-btn {
+  background: rgba(30, 41, 59, 0.6) !important;
+  color: #cbd5e1 !important;
+}
+.theme-win7.theme-dark .win7-titlebar-btn:hover {
+  background: rgba(51, 65, 85, 0.8) !important;
+  box-shadow: 0 0 5px rgba(56, 189, 248, 0.4) !important;
+}
+
+/* Windows 7 Window Controls (Minimize, Maximize, Close) */
+.win7-sys-btn {
+  width: 28px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+}
+.theme-light .win7-min-btn,
+.theme-light .win7-max-btn {
+  color: #274b6e;
+}
+.theme-dark .win7-min-btn,
+.theme-dark .win7-max-btn {
+  color: #94a3b8;
+}
+.win7-min-btn:hover,
+.win7-max-btn:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+  border-radius: 2px;
+}
+.win7-close-btn {
+  width: 38px;
+  height: 22px;
+  background: linear-gradient(180deg, #e87a7a 0%, #c42b2b 48%, #b51c1c 49%, #9e1414 100%) !important;
+  border: 1px solid #7a1212 !important;
+  border-top: none !important;
+  border-right: none !important;
+  border-radius: 0 0 3px 0 !important;
+  color: #ffffff !important;
+}
+.win7-close-btn:hover {
+  background: linear-gradient(180deg, #ff9e9e 0%, #e83a3a 48%, #d62020 49%, #b01010 100%) !important;
+  box-shadow: 0 0 8px rgba(255, 50, 50, 0.7) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. WINDOWS 7 AERO PUSH BUTTONS
+   -------------------------------------------------------------------------- */
+.theme-win7 button:not(.win7-sys-btn):not(.no-win7-btn) {
+  border-radius: 3px !important;
+  font-family: 'Segoe UI', Tahoma, sans-serif !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Light mode Aero buttons */
+.theme-win7.theme-light button:not(.win7-sys-btn):not(.no-win7-btn):not(.win7-primary-btn) {
+  background: linear-gradient(180deg, #ffffff 0%, #f2f2f2 48%, #e1e1e1 49%, #cfcfcf 100%) !important;
+  border: 1px solid #707070 !important;
+  color: #1e395b !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+}
+.theme-win7.theme-light button:not(.win7-sys-btn):not(.no-win7-btn):not(.win7-primary-btn):hover {
+  background: linear-gradient(180deg, #eaf6fd 0%, #d9f0fc 48%, #bee6fd 49%, #a7d9f5 100%) !important;
+  border-color: #3c7fb1 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 0 6px rgba(0, 150, 255, 0.45) !important;
+  color: #000000 !important;
+}
+.theme-win7.theme-light button:not(.win7-sys-btn):not(.no-win7-btn):not(.win7-primary-btn):active {
+  background: linear-gradient(180deg, #c2e4f6 0%, #a2d2ee 48%, #7ec0e7 49%, #67a9d3 100%) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 50, 100, 0.35) !important;
+}
+
+/* Dark mode Aero buttons */
+.theme-win7.theme-dark button:not(.win7-sys-btn):not(.no-win7-btn):not(.win7-primary-btn) {
+  background: linear-gradient(180deg, #2b3947 0%, #202c38 48%, #17212b 49%, #101820 100%) !important;
+  border: 1px solid #3b4e61 !important;
+  color: #e2e8f0 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+.theme-win7.theme-dark button:not(.win7-sys-btn):not(.no-win7-btn):not(.win7-primary-btn):hover {
+  background: linear-gradient(180deg, #324a61 0%, #243a4e 48%, #182d3f 49%, #10212f 100%) !important;
+  border-color: #38bdf8 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 7px rgba(56, 189, 248, 0.5) !important;
+  color: #ffffff !important;
+}
+.theme-win7.theme-dark button:not(.win7-sys-btn):not(.no-win7-btn):not(.win7-primary-btn):active {
+  background: linear-gradient(180deg, #182633 0%, #121e29 48%, #0d1620 49%, #080f17 100%) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Primary Glowing Aero Default Button (Automatikus Tervezés) */
+.theme-win7.theme-light .win7-primary-btn {
+  background: linear-gradient(180deg, #dcf2ff 0%, #b3e2ff 48%, #73c7ff 49%, #3caeff 100%) !important;
+  border: 1px solid #1a6296 !important;
+  color: #002244 !important;
+  font-weight: 600 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 8px rgba(60, 174, 255, 0.6) !important;
+}
+.theme-win7.theme-light .win7-primary-btn:hover {
+  background: linear-gradient(180deg, #ebf7ff 0%, #cbe9ff 48%, #8ed3ff 49%, #57b9ff 100%) !important;
+  border-color: #0d4a75 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 0 12px rgba(60, 174, 255, 0.85) !important;
+}
+.theme-win7.theme-dark .win7-primary-btn {
+  background: linear-gradient(180deg, #0284c7 0%, #0369a1 48%, #075985 49%, #0c4a6e 100%) !important;
+  border: 1px solid #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(56, 189, 248, 0.5) !important;
+}
+.theme-win7.theme-dark .win7-primary-btn:hover {
+  background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 48%, #0369a1 49%, #075985 100%) !important;
+  border-color: #7dd3fc !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 14px rgba(56, 189, 248, 0.75) !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. WINDOWS 7 SELECTS AND INPUTS
+   -------------------------------------------------------------------------- */
+.theme-win7 select,
+.theme-win7 input[type="text"],
+.theme-win7 input[type="search"] {
+  border-radius: 2px !important;
+  font-family: 'Segoe UI', Tahoma, sans-serif !important;
+  border: 1px solid #7f9db9 !important;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+}
+.theme-win7.theme-light select,
+.theme-win7.theme-light input {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+.theme-win7.theme-dark select,
+.theme-win7.theme-dark input {
+  background-color: #17222e !important;
+  color: #e2e8f0 !important;
+  border-color: #33495d !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. WINDOWS 7 LISTS & SCHEDULEGRID TABLE HEADERS
+   -------------------------------------------------------------------------- */
+.theme-win7 table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+.theme-win7.theme-light th {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f4f4 48%, #e8e8e8 49%, #dfdfdf 100%) !important;
+  border-right: 1px solid #d4d4d4 !important;
+  border-bottom: 1px solid #b8b8b8 !important;
+  color: #1e395b !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 0 #ffffff;
+}
+.theme-win7.theme-dark th {
+  background: linear-gradient(180deg, #1e293b 0%, #151f2e 48%, #0f1724 49%, #0a1018 100%) !important;
+  border-right: 1px solid #334155 !important;
+  border-bottom: 1px solid #475569 !important;
+  color: #93c5fd !important;
+  font-weight: 600 !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. WINDOWS 7 MODALS & DIALOGS
+   -------------------------------------------------------------------------- */
+.theme-win7 .fixed > .relative,
+.theme-win7 [role="dialog"] {
+  border-radius: 6px !important;
+  border: 1px solid rgba(43, 91, 132, 0.8) !important;
+  box-shadow: 0 14px 40px rgba(0, 30, 60, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.6) inset !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. SCROLLBARS
+   -------------------------------------------------------------------------- */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -25,6 +416,16 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(100, 116, 139, 0.9);
+}
+
+.theme-win7 ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #e4eff8 0%, #c4dcf2 50%, #9fc4e8 100%) !important;
+  border: 1px solid #7da2ce !important;
+  border-radius: 2px !important;
+}
+.theme-win7 ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #cfe6fa 0%, #a2cbf0 50%, #76aee4 100%) !important;
+  border-color: #3c7fb1 !important;
 }
 
 @media print {

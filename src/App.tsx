@@ -41,9 +41,14 @@ import { StationManagementModal } from './components/StationManagementModal';
 import { WorkTimeSummaryModal } from './components/WorkTimeSummaryModal';
 import { MavRulesReferenceDrawer } from './components/MavRulesReferenceDrawer';
 import { PrintScheduleView } from './components/PrintScheduleView';
+import { Win7Titlebar } from './components/Win7Titlebar';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { Plus, Users, Building2 } from 'lucide-react';
 
-export default function App() {
+function MainApp() {
+  const { designStyle, colorMode } = useTheme();
+  const isLight = colorMode === 'light';
+  const isWin7 = designStyle === 'win7';
   const [activeTab, setActiveTab] = useState<'schedule' | 'compliance' | 'leaves' | 'worktime' | 'rules'>('schedule');
   
   // Stations state (user can add, update, delete stations)
@@ -722,8 +727,11 @@ export default function App() {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 theme-root-container ${designStyle === 'win7' ? 'theme-win7' : 'theme-modern'} ${colorMode === 'light' ? 'theme-light bg-slate-100 text-slate-900' : 'theme-dark bg-slate-950 text-slate-100'}`}>
       
+      {/* Windows 7 Aero Window Titlebar (only in Windows 7 mode) */}
+      {designStyle === 'win7' && <Win7Titlebar station={selectedStation} />}
+
       {/* If print view is triggered, display printable document */}
       {isPrintViewOpen ? (
         <PrintScheduleView
@@ -777,39 +785,51 @@ export default function App() {
           />
 
           {/* Station Context Banner & Station Switch Bar */}
-          <div className="bg-slate-900/60 border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2 no-print flex items-center justify-between text-xs flex-wrap gap-2">
+          <div className={`${
+            isLight 
+              ? 'bg-slate-200/60 border-b border-slate-300 text-slate-800' 
+              : 'bg-slate-900/60 border-b border-slate-800/80 text-slate-300'
+          } px-4 sm:px-6 lg:px-8 py-2 no-print flex items-center justify-between text-xs flex-wrap gap-2 transition-colors`}>
             <div className="flex items-center gap-2">
-              <span className="text-slate-400 flex items-center gap-1">
-                <Building2 className="w-3.5 h-3.5 text-amber-400" />
+              <span className={`flex items-center gap-1 ${isLight ? 'text-slate-700 font-medium' : 'text-slate-400'}`}>
+                <Building2 className={`w-3.5 h-3.5 ${isLight ? 'text-amber-700' : 'text-amber-400'}`} />
                 Aktív szolgálati hely:
               </span>
-              <span className="font-bold text-white bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+              <span className={`font-bold px-2 py-0.5 rounded border ${
+                isLight 
+                  ? 'text-slate-950 bg-white border-slate-300 shadow-2xs' 
+                  : 'text-white bg-slate-800 border-slate-700'
+              }`}>
                 {selectedStation.name} ({selectedStation.lineCode})
               </span>
               <button
                 onClick={() => setIsStationModalOpen(true)}
-                className="text-amber-400 hover:text-amber-300 underline underline-offset-2 ml-1 cursor-pointer font-medium"
+                className={`${isLight ? 'text-amber-800 hover:text-amber-900' : 'text-amber-400 hover:text-amber-300'} underline underline-offset-2 ml-1 cursor-pointer font-semibold transition-colors`}
               >
                 Szolgálati hely adatai / Új állomás felvétele
               </button>
             </div>
 
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-1.5 cursor-pointer text-slate-300">
+              <label className={`flex items-center gap-1.5 cursor-pointer font-medium ${isLight ? 'text-slate-700' : 'text-slate-300'}`}>
                 <input
                   type="checkbox"
                   checked={filterByStation}
                   onChange={(e) => setFilterByStation(e.target.checked)}
-                  className="rounded bg-slate-900 border-slate-700 text-amber-500 focus:ring-0 w-3.5 h-3.5"
+                  className={`rounded border text-amber-500 focus:ring-0 w-3.5 h-3.5 ${isLight ? 'bg-white border-slate-400' : 'bg-slate-900 border-slate-700'}`}
                 />
                 <span>Csak ezen állomás személyzete ({activeStationEmployees.length} fő)</span>
               </label>
 
               <button
                 onClick={() => setIsTeamModalOpen(true)}
-                className="flex items-center gap-1 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded transition-colors"
+                className={`flex items-center gap-1 px-2.5 py-1 rounded transition-colors font-medium cursor-pointer ${
+                  isLight 
+                    ? 'text-slate-800 hover:text-slate-950 bg-white hover:bg-slate-50 border border-slate-300 shadow-2xs' 
+                    : 'text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700'
+                }`}
               >
-                <Users className="w-3.5 h-3.5 text-amber-400" />
+                <Users className={`w-3.5 h-3.5 ${isLight ? 'text-amber-700' : 'text-amber-400'}`} />
                 <span>+ Dolgozó hozzárendelése</span>
               </button>
             </div>
@@ -915,5 +935,13 @@ export default function App() {
       />
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <MainApp />
+    </ThemeProvider>
   );
 }
