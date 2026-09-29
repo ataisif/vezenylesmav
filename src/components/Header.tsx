@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Train, 
   Calendar, 
@@ -12,10 +12,10 @@ import {
   BarChart3,
   Building2,
   Plus,
-  FileText
+  ChevronDown,
+  Layers
 } from 'lucide-react';
 import { StationConfig } from '../types';
-import { downloadUserGuideDOCX } from '../utils/userGuideGenerator';
 
 interface HeaderProps {
   activeTab: 'schedule' | 'compliance' | 'leaves' | 'worktime' | 'rules';
@@ -32,7 +32,9 @@ interface HeaderProps {
   onPrint: () => void;
   onOpenTeamModal: () => void;
   onOpenStationModal: () => void;
-  onOpenUserGuide: () => void;
+  onOpenLeavesModal: () => void;
+  onOpenWorkTimeModal: () => void;
+  onOpenRulesDrawer: () => void;
   violationCount: number;
   isGenerating?: boolean;
 }
@@ -52,271 +54,322 @@ export const Header: React.FC<HeaderProps> = ({
   onPrint,
   onOpenTeamModal,
   onOpenStationModal,
-  onOpenUserGuide,
+  onOpenLeavesModal,
+  onOpenWorkTimeModal,
+  onOpenRulesDrawer,
   violationCount,
   isGenerating = false
 }) => {
+  const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
+  const toolsMenuRef = useRef<HTMLDivElement>(null);
+
   const monthsHu = [
     'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
     'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'
   ];
 
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(event.target as Node)) {
+        setIsToolsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-30 no-print">
-      {/* Main Top Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+    <header className="border-b border-slate-800 bg-slate-950/95 backdrop-blur sticky top-0 z-30 no-print select-none">
+      {/* 1. SOR: Szolgálati hely, Időszak, Tervezés & Globális Vezérlők (Minden balra igazítva) */}
+      <div className="px-4 sm:px-6 py-2 border-b border-slate-800/70">
+        <div className="flex items-center justify-start gap-2.5 flex-wrap">
           
-          {/* Zone 1: Brand Wordmark & Top-Left Download Links (Bal felső sarok) */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="h-9 w-9 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-              <Train className="w-5 h-5" />
+          {/* MÁV Brand Wordmark - kompakt bal sarok */}
+          <div className="flex items-center gap-2 shrink-0 pr-1">
+            <div className="h-7 w-7 rounded bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <Train className="w-4 h-4" />
             </div>
-            <div>
-              <span className="text-base font-bold tracking-tight text-white flex items-center gap-2">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-xs font-bold tracking-tight text-white">
                 MÁV PÁLYAMŰKÖDTETÉS
               </span>
-              <p className="text-[11px] text-slate-400 font-medium tracking-wide">
-                Kollektív Szerződés Vezényléstervező
-              </p>
-            </div>
-
-            {/* Bal felső sarok: Felhasználói Útmutató Letöltési Gombok */}
-            <div className="flex items-center gap-1.5 ml-1 sm:ml-3 pl-2 sm:pl-3 border-l border-slate-800">
-              <button
-                type="button"
-                onClick={onOpenUserGuide}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-semibold transition-all cursor-pointer shadow-xs"
-                title="Felhasználói Útmutató megnyitása és olvasása"
-              >
-                <BookOpen className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span className="hidden md:inline">Felhasználói Útmutató</span>
-                <span className="md:hidden">Útmutató</span>
-              </button>
-
-              {/* Direct DOCX Download Link */}
-              <button
-                type="button"
-                onClick={downloadUserGuideDOCX}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-[11px] font-bold transition-all cursor-pointer shadow-xs"
-                title="Felhasználói Útmutató közvetlen letöltése Word formátumban (.docx)"
-              >
-                <FileText className="w-3 h-3 shrink-0" />
-                <span>DOCX Letöltés</span>
-              </button>
+              <span className="text-slate-600 hidden sm:inline">·</span>
+              <span className="text-[10px] text-slate-400 font-medium hidden sm:inline">
+                KSz Vezényléstervező
+              </span>
             </div>
           </div>
 
-          {/* Zone 2: Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1">
-            <button
-              onClick={() => setActiveTab('schedule')}
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
-                activeTab === 'schedule'
-                  ? 'bg-slate-800 text-amber-400 border border-slate-700'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <Calendar className="w-3.5 h-3.5" />
-              <span>Vezénylési Rács</span>
-            </button>
+          <div className="h-4 w-px bg-slate-800 shrink-0" aria-hidden="true" />
 
-            <button
-              onClick={() => setActiveTab('compliance')}
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap relative cursor-pointer ${
-                activeTab === 'compliance'
-                  ? 'bg-slate-800 text-amber-400 border border-slate-700'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-900'
-              }`}
+          {/* Szolgálati hely választó & + Új hely */}
+          <div className="flex items-center bg-slate-900 border border-slate-700/80 rounded-md p-0.5 shrink-0">
+            <div className="pl-1.5 pr-0.5 text-amber-400/80 shrink-0" title="Aktív állomás">
+              <Building2 className="w-3.5 h-3.5" />
+            </div>
+            <select
+              value={selectedStation.id}
+              onChange={(e) => {
+                if (e.target.value === '__add_new__') {
+                  onOpenStationModal();
+                  return;
+                }
+                const s = stations.find(item => item.id === e.target.value);
+                if (s) setSelectedStation(s);
+              }}
+              className="bg-transparent text-slate-200 text-xs px-1.5 py-1 focus:outline-none max-w-[150px] sm:max-w-[200px] truncate cursor-pointer font-medium"
+              title="Szolgálati hely kiválasztása"
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Szabályossági Audit</span>
-              {violationCount > 0 && (
-                <span className="inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded">
-                  {violationCount}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('leaves')}
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
-                activeTab === 'leaves'
-                  ? 'bg-slate-800 text-amber-400 border border-slate-700'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <Clock className="w-3.5 h-3.5" />
-              <span>Szabadságok & Igények</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('worktime')}
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
-                activeTab === 'worktime'
-                  ? 'bg-slate-800 text-amber-400 border border-slate-700'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <BarChart3 className="w-3.5 h-3.5" />
-              <span>Munkaidő Mérleg</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('rules')}
-              className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
-                activeTab === 'rules'
-                  ? 'bg-slate-800 text-amber-400 border border-slate-700'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-900'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>MÁV KSz Szabálytár</span>
-            </button>
-          </nav>
-
-          {/* Zone 3: Primary Actions and Selectors */}
-          <div className="flex items-center gap-2 shrink-0">
-            
-            {/* Station selector & Add Station button group */}
-            <div className="flex items-center bg-slate-900 border border-slate-700 rounded-lg p-0.5">
-              <select
-                value={selectedStation.id}
-                onChange={(e) => {
-                  if (e.target.value === '__add_new__') {
-                    onOpenStationModal();
-                    return;
-                  }
-                  const s = stations.find(item => item.id === e.target.value);
-                  if (s) setSelectedStation(s);
-                }}
-                className="bg-transparent text-slate-200 text-xs px-2 py-1 focus:outline-none max-w-[140px] sm:max-w-[190px] truncate"
-                title="Szolgálati hely kiválasztása"
-              >
-                {stations.map((st) => (
-                  <option key={st.id} value={st.id} className="bg-slate-900 text-white">
-                    {st.name} {st.category === 'MAJOR_HIGH_TRAFFIC' ? '★ (12/A)' : ''}
-                  </option>
-                ))}
-                <option value="__add_new__" className="bg-slate-900 text-amber-400 font-semibold">
-                  + Új szolgálati hely felvétele...
+              {stations.map((st) => (
+                <option key={st.id} value={st.id} className="bg-slate-900 text-white">
+                  {st.name} {st.category === 'MAJOR_HIGH_TRAFFIC' ? '★ (12/A)' : ''}
                 </option>
-              </select>
+              ))}
+              <option value="__add_new__" className="bg-slate-900 text-amber-400 font-semibold">
+                + Új szolgálati hely felvétele...
+              </option>
+            </select>
 
-              <button
-                type="button"
-                onClick={onOpenStationModal}
-                title="Szolgálati helyek beállítása és új állomás hozzáadása"
-                className="p-1 text-amber-400 hover:text-amber-300 hover:bg-slate-800 rounded transition-colors flex items-center gap-0.5 text-xs font-medium ml-1 cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline text-[11px]">Új hely</span>
-              </button>
-            </div>
-
-            {/* Month & Year Selectors */}
-            <div className="flex items-center bg-slate-900 border border-slate-700 rounded-lg p-0.5">
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(Number(e.target.value))}
-                className="bg-transparent text-slate-200 text-xs px-2 py-1 focus:outline-none"
-              >
-                <option value={2025} className="bg-slate-900">2025</option>
-                <option value={2026} className="bg-slate-900">2026</option>
-              </select>
-              <span className="text-slate-600 text-xs">/</span>
-              <select
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                className="bg-transparent text-slate-200 text-xs px-2 py-1 focus:outline-none"
-              >
-                {monthsHu.map((m, idx) => (
-                  <option key={idx} value={idx} className="bg-slate-900">
-                    {m}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Team manager button */}
             <button
-              onClick={onOpenTeamModal}
-              title="Vasúti munkavállalók és munkarendek szerkesztése"
-              className="p-1.5 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition-colors cursor-pointer"
+              type="button"
+              onClick={onOpenStationModal}
+              title="Szolgálati hely konfigurálása és új állomás felvétele"
+              className="px-1.5 py-1 text-amber-400 hover:text-amber-300 hover:bg-slate-800 rounded text-[11px] font-semibold transition-colors flex items-center gap-0.5 cursor-pointer"
             >
-              <Users className="w-4 h-4" />
+              <Plus className="w-3 h-3" />
+              <span>Új hely</span>
             </button>
+          </div>
 
-            {/* CSV export */}
+          <div className="h-4 w-px bg-slate-800 shrink-0" aria-hidden="true" />
+
+          {/* Év & Hónap választó */}
+          <div className="flex items-center bg-slate-900 border border-slate-700/80 rounded-md p-0.5 shrink-0">
+            <div className="pl-1.5 pr-0.5 text-slate-400 shrink-0">
+              <Calendar className="w-3.5 h-3.5" />
+            </div>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+              className="bg-transparent text-slate-200 text-xs px-1.5 py-1 focus:outline-none cursor-pointer font-medium"
+              title="Év"
+            >
+              <option value={2025} className="bg-slate-900">2025</option>
+              <option value={2026} className="bg-slate-900">2026</option>
+            </select>
+            <span className="text-slate-600 text-xs px-0.5">/</span>
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(Number(e.target.value))}
+              className="bg-transparent text-slate-200 text-xs px-1.5 py-1 focus:outline-none cursor-pointer font-medium"
+              title="Hónap"
+            >
+              {monthsHu.map((m, idx) => (
+                <option key={idx} value={idx} className="bg-slate-900">
+                  {m}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="h-4 w-px bg-slate-800 shrink-0" aria-hidden="true" />
+
+          {/* Fő Művelet: Automatikus Tervezés */}
+          <button
+            onClick={onAutoGenerate}
+            disabled={isGenerating}
+            className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs px-3 py-1.5 rounded-md shadow-xs transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer shrink-0"
+            title="Havi vezénylési rács automatikus feltöltése a MÁV KSz szabályai szerint"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{isGenerating ? 'Tervezés...' : 'Automatikus Tervezés'}</span>
+          </button>
+
+          {/* Dolgozók / Személyzet gomb */}
+          <button
+            onClick={onOpenTeamModal}
+            title="Vasúti személyzet, képesítések és munkarendek kezelése"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
+          >
+            <Users className="w-3.5 h-3.5 text-amber-400" />
+            <span>Személyzet</span>
+          </button>
+
+          {/* Gyors Export & Nyomtatás ikonok */}
+          <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={onExportCSV}
               title="Exportálás Excel-kompatibilis CSV formátumban"
-              className="p-1.5 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-md transition-colors cursor-pointer"
             >
-              <FileSpreadsheet className="w-4 h-4" />
+              <FileSpreadsheet className="w-3.5 h-3.5" />
             </button>
-
-            {/* Print button */}
             <button
               onClick={onPrint}
               title="Hivatalos MÁV Havi Vezénylési Lap nyomtatása / PDF"
-              className="p-1.5 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 rounded-md transition-colors cursor-pointer"
             >
-              <Printer className="w-4 h-4" />
+              <Printer className="w-3.5 h-3.5" />
             </button>
-
-            {/* Primary Action Button: Smart Schedule Auto-Generator */}
-            <button
-              onClick={onAutoGenerate}
-              disabled={isGenerating}
-              className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs px-3.5 py-1.5 rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-50 whitespace-nowrap cursor-pointer"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{isGenerating ? 'Tervezés...' : 'Automatikus Tervezés'}</span>
-            </button>
-
           </div>
+
         </div>
       </div>
 
-      {/* Mobile navigation bar */}
-      <div className="lg:hidden flex items-center overflow-x-auto px-4 py-2 border-t border-slate-800 gap-2 bg-slate-950">
+      {/* 2. SOR: Navigációs Fülek & Almenük (Teljesen balra igazítva) */}
+      <div className="px-4 sm:px-6 py-1 bg-slate-900/40 flex items-center justify-start gap-1 overflow-x-auto">
+        
+        {/* Navigációs fül: Vezénylési Rács */}
         <button
           onClick={() => setActiveTab('schedule')}
-          className={`px-3 py-1 text-xs rounded whitespace-nowrap ${activeTab === 'schedule' ? 'bg-slate-800 text-amber-400' : 'text-slate-400'}`}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer shrink-0 ${
+            activeTab === 'schedule'
+              ? 'bg-slate-800 text-amber-400 border border-slate-700 shadow-xs'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+          }`}
         >
-          Vezénylés
+          <Calendar className="w-3.5 h-3.5" />
+          <span>Vezénylési Rács</span>
         </button>
+
+        {/* Navigációs fül: Szabályossági Audit */}
         <button
           onClick={() => setActiveTab('compliance')}
-          className={`px-3 py-1 text-xs rounded whitespace-nowrap ${activeTab === 'compliance' ? 'bg-slate-800 text-amber-400' : 'text-slate-400'}`}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer shrink-0 ${
+            activeTab === 'compliance'
+              ? 'bg-slate-800 text-amber-400 border border-slate-700 shadow-xs'
+              : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+          }`}
         >
-          Audit ({violationCount})
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Szabályossági Audit</span>
+          {violationCount > 0 && (
+            <span className="inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded">
+              {violationCount}
+            </span>
+          )}
         </button>
+
+        {/* Navigációs fül: Szabadságok & Igények (modalt nyit meg) */}
         <button
-          onClick={() => setActiveTab('leaves')}
-          className={`px-3 py-1 text-xs rounded whitespace-nowrap ${activeTab === 'leaves' ? 'bg-slate-800 text-amber-400' : 'text-slate-400'}`}
+          onClick={onOpenLeavesModal}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0"
         >
-          Szabadságok
+          <Clock className="w-3.5 h-3.5 text-emerald-400" />
+          <span>Szabadságok & Igények</span>
         </button>
+
+        {/* Navigációs fül: Munkaidő Mérleg (modalt nyit meg) */}
         <button
-          onClick={() => setActiveTab('worktime')}
-          className={`px-3 py-1 text-xs rounded whitespace-nowrap ${activeTab === 'worktime' ? 'bg-slate-800 text-amber-400' : 'text-slate-400'}`}
+          onClick={onOpenWorkTimeModal}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0"
         >
-          Munkaidő Mérleg
+          <BarChart3 className="w-3.5 h-3.5 text-indigo-400" />
+          <span>Munkaidő Mérleg</span>
         </button>
+
+        {/* Navigációs fül: MÁV KSz Szabálytár (fiókot nyit meg) */}
         <button
-          onClick={() => setActiveTab('rules')}
-          className={`px-3 py-1 text-xs rounded whitespace-nowrap ${activeTab === 'rules' ? 'bg-slate-800 text-amber-400' : 'text-slate-400'}`}
+          onClick={onOpenRulesDrawer}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors whitespace-nowrap cursor-pointer shrink-0"
         >
-          MÁV Szabálytár
+          <BookOpen className="w-3.5 h-3.5 text-amber-300" />
+          <span>MÁV KSz Szabálytár</span>
         </button>
-        <button
-          onClick={onOpenStationModal}
-          className="px-3 py-1 text-xs rounded whitespace-nowrap bg-amber-500/10 text-amber-300 border border-amber-500/30"
-        >
-          + Szolgálati helyek
-        </button>
+
+        <div className="h-3.5 w-px bg-slate-800 shrink-0 mx-1" aria-hidden="true" />
+
+        {/* Almenü: További Eszközök és Műveletek */}
+        <div className="relative shrink-0" ref={toolsMenuRef}>
+          <button
+            type="button"
+            onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap cursor-pointer ${
+              isToolsMenuOpen 
+                ? 'bg-slate-800 text-amber-400 border border-slate-700' 
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Layers className="w-3.5 h-3.5" />
+            <span>További Műveletek</span>
+            <ChevronDown className={`w-3 h-3 transition-transform ${isToolsMenuOpen ? 'rotate-180 text-amber-400' : 'text-slate-400'}`} />
+          </button>
+
+          {/* Lenyíló almenü panel */}
+          {isToolsMenuOpen && (
+            <div className="absolute left-0 mt-1.5 w-64 bg-slate-900 border border-slate-700 rounded-lg shadow-xl py-1 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="px-3 py-1.5 border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400">
+                Adatkezelés & Export
+              </div>
+              
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  onExportCSV();
+                }}
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-emerald-400 shrink-0" />
+                <div>
+                  <div className="font-medium">Excel / CSV Exportálás</div>
+                  <div className="text-[10px] text-slate-400">Havi beosztás táblázatos letöltése</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  onPrint();
+                }}
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <Printer className="w-4 h-4 text-sky-400 shrink-0" />
+                <div>
+                  <div className="font-medium">Hivatalos Vezénylési Lap</div>
+                  <div className="text-[10px] text-slate-400">A4 formátumú nyomtatás és PDF</div>
+                </div>
+              </button>
+
+              <div className="px-3 py-1.5 border-t border-b border-slate-800 text-[10px] uppercase tracking-wider font-semibold text-slate-400 mt-1">
+                Törzsadatok és Személyzet
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  onOpenTeamModal();
+                }}
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <Users className="w-4 h-4 text-amber-400 shrink-0" />
+                <div>
+                  <div className="font-medium">Dolgozók és Munkarendek</div>
+                  <div className="text-[10px] text-slate-400">Képesítések, utazási idők, létszám</div>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsToolsMenuOpen(false);
+                  onOpenStationModal();
+                }}
+                className="w-full text-left px-3 py-2 text-xs text-slate-200 hover:text-white hover:bg-slate-800 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <Building2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <div>
+                  <div className="font-medium">Szolgálati Helyek Beállítása</div>
+                  <div className="text-[10px] text-slate-400">Állomások, vonalszámok és műszakigények</div>
+                </div>
+              </button>
+            </div>
+          )}
+        </div>
+
       </div>
     </header>
   );

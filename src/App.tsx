@@ -41,7 +41,6 @@ import { StationManagementModal } from './components/StationManagementModal';
 import { WorkTimeSummaryModal } from './components/WorkTimeSummaryModal';
 import { MavRulesReferenceDrawer } from './components/MavRulesReferenceDrawer';
 import { PrintScheduleView } from './components/PrintScheduleView';
-import { UserGuideModal } from './components/UserGuideModal';
 import { Plus, Users, Building2 } from 'lucide-react';
 
 export default function App() {
@@ -68,7 +67,6 @@ export default function App() {
   const [isWorkTimeModalOpen, setIsWorkTimeModalOpen] = useState(false);
   const [isRulesDrawerOpen, setIsRulesDrawerOpen] = useState(false);
   const [isPrintViewOpen, setIsPrintViewOpen] = useState(false);
-  const [isUserGuideOpen, setIsUserGuideOpen] = useState(false);
 
   const [editingCell, setEditingCell] = useState<{
     employee: Employee;
@@ -758,7 +756,9 @@ export default function App() {
             onPrint={handlePrint}
             onOpenTeamModal={() => setIsTeamModalOpen(true)}
             onOpenStationModal={() => setIsStationModalOpen(true)}
-            onOpenUserGuide={() => setIsUserGuideOpen(true)}
+            onOpenLeavesModal={() => setIsLeaveModalOpen(true)}
+            onOpenWorkTimeModal={() => setIsWorkTimeModalOpen(true)}
+            onOpenRulesDrawer={() => setIsRulesDrawerOpen(true)}
             violationCount={violations.length}
             isGenerating={isGenerating}
           />
@@ -912,12 +912,6 @@ export default function App() {
       <MavRulesReferenceDrawer
         isOpen={isRulesDrawerOpen}
         onClose={() => setIsRulesDrawerOpen(false)}
-      />
-
-      {/* User Guide Modal with In-App Viewer and PDF/DOCX Downloads */}
-      <UserGuideModal
-        isOpen={isUserGuideOpen}
-        onClose={() => setIsUserGuideOpen(false)}
       />
 
     </div>
