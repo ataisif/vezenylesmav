@@ -1,0 +1,6 @@
+{
+  "name": "MÁV Vasúti Munkaidő és Vezénylés Tervező",
+  "description": "MÁV Pályaműködtetési Zrt. Kollektív Szerződés és Mt. szerinti intelligens munkaidő-beosztás tervező automatikus pihenőidő, szabadság és műszakigény validációval.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
