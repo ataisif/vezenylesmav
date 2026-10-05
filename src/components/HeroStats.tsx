@@ -35,9 +35,8 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
   onViewRequests,
   onOpenStationModal
 }) => {
-  const { colorMode, designStyle } = useTheme();
+  const { colorMode } = useTheme();
   const isLight = colorMode === 'light';
-  const isWin7 = designStyle === 'win7';
 
   const monthsHu = [
     'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
@@ -58,13 +57,8 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
     .filter(a => a.shiftTypeId !== 'PIH' && a.shiftTypeId !== 'SZAB' && a.shiftTypeId !== 'BETEG')
     .reduce((sum, a) => sum + a.durationHours, 0);
 
-  // Common card styling depending on theme and mode
+  // Common card styling depending on light / dark mode
   const getCardBaseClass = (extraClasses: string = '') => {
-    if (isWin7) {
-      return isLight
-        ? `bg-gradient-to-b from-white via-[#f4f8fc] to-[#e8f1fa] border border-[#a2c5ea] shadow-xs hover:border-[#5ca0e5] rounded transition-all ${extraClasses}`
-        : `bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-700/80 shadow-md rounded hover:border-sky-500/50 transition-all ${extraClasses}`;
-    }
     return isLight
       ? `bg-white border border-slate-200/90 shadow-xs hover:border-slate-300 hover:shadow-sm rounded-xl transition-all ${extraClasses}`
       : `bg-slate-950/70 border border-slate-800 rounded-lg hover:border-slate-700/80 transition-all ${extraClasses}`;
@@ -74,13 +68,9 @@ export const HeroStats: React.FC<HeroStatsProps> = ({
     <section 
       aria-label="Vezénylési összefoglaló mérőszámok"
       className={`border-b transition-colors duration-150 no-print select-none ${
-        isWin7
-          ? isLight 
-            ? 'bg-gradient-to-b from-[#e8f1fb] to-[#d7e6f5] border-[#9dbfe2]'
-            : 'bg-gradient-to-b from-slate-900 to-slate-950 border-slate-800'
-          : isLight
-            ? 'bg-slate-100/80 border-slate-200'
-            : 'bg-slate-900 border-slate-800'
+        isLight
+          ? 'bg-slate-100/80 border-slate-200'
+          : 'bg-slate-900 border-slate-800'
       } px-4 sm:px-6 lg:px-8 py-3.5`}
     >
       <div className="max-w-7xl mx-auto">

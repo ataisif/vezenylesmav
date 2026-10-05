@@ -41,14 +41,12 @@ import { StationManagementModal } from './components/StationManagementModal';
 import { WorkTimeSummaryModal } from './components/WorkTimeSummaryModal';
 import { MavRulesReferenceDrawer } from './components/MavRulesReferenceDrawer';
 import { PrintScheduleView } from './components/PrintScheduleView';
-import { Win7Titlebar } from './components/Win7Titlebar';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { Plus, Users, Building2 } from 'lucide-react';
 
 function MainApp() {
-  const { designStyle, colorMode } = useTheme();
+  const { colorMode } = useTheme();
   const isLight = colorMode === 'light';
-  const isWin7 = designStyle === 'win7';
   const [activeTab, setActiveTab] = useState<'schedule' | 'compliance' | 'leaves' | 'worktime' | 'rules'>('schedule');
   
   // Stations state (user can add, update, delete stations)
@@ -727,10 +725,7 @@ function MainApp() {
   }, [activeTab]);
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 theme-root-container ${designStyle === 'win7' ? 'theme-win7' : 'theme-modern'} ${colorMode === 'light' ? 'theme-light bg-slate-100 text-slate-900' : 'theme-dark bg-slate-950 text-slate-100'}`}>
-      
-      {/* Windows 7 Aero Window Titlebar (only in Windows 7 mode) */}
-      {designStyle === 'win7' && <Win7Titlebar station={selectedStation} />}
+    <div className={`min-h-screen flex flex-col font-sans transition-colors duration-200 theme-root-container ${colorMode === 'light' ? 'theme-light bg-slate-100 text-slate-900' : 'theme-dark bg-slate-950 text-slate-100'}`}>
 
       {/* If print view is triggered, display printable document */}
       {isPrintViewOpen ? (
